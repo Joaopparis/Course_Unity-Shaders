@@ -1,0 +1,16 @@
+#pragma kernel Move
+
+RWStructuredBuffer<float3> buffer;
+
+float3 position;//Trail gameobject pos
+float velocity;
+
+[numthreads(16,1,1)]
+void Move (uint3 id : SV_DispatchThreadID)
+{
+    float d = distance(buffer[id.x], position);
+    if(d > 0.1){
+        float3 dir = normalize(position - buffer[id.x]);
+        buffer[id.x] += dir * velocity * (id.x+1.0) / 10.0;
+    }
+}
